@@ -23,6 +23,7 @@ services:
       - cdr
     depends_on:
       - cassandra
+      - solr
     deploy:
       restart_policy:
         condition: any
@@ -47,6 +48,20 @@ services:
         protocol: tcp
     networks:
       - cdr
+  solr:
+    image: solr
+    ports:
+     - "8983:8983"
+    volumes:
+      - data:/opt/solr/server/solr/mycores
+    entrypoint:
+      - docker-entrypoint.sh
+      - solr-precreate
+      - searchTerms
+    networks:
+      - cdr
 networks:
   cdr:
     external: true
+volumes:
+  data:
